@@ -31,17 +31,17 @@ class SendMessageAction
     public function __invoke(Request $req, Response $resp) 
     {
         $data = json_decode($req->getBody()->getContents());
-        $message = $data->userMessage;
+        $message = $data->messageText;
         $sessionToken = $data->storeSession;
 
         if ($sessionToken == null) {
             $sessionToken = $this->createConversation();
         }
 
-        $this->sendMessage($sessionToken);
+        $answer = $this->sendMessage($sessionToken, $message);
 
     
-        $json = json_encode(["message" => $message, "storeSession" => $sessionToken], JSON_PRETTY_PRINT);
+        $json = json_encode(["answer" => $answer, "storeSession" => $sessionToken], JSON_PRETTY_PRINT);
         $resp->getBody()->write($json);
 
         return $resp
@@ -57,11 +57,10 @@ class SendMessageAction
         return $conversation->getSessionToken();
     }
 
-    private function sendMessage(string $sessionToken): Message
+    private function sendMessage(string $sessionToken, string $message): Message
     {
-        $command = new SendMessageCommand($sessionToken);
-        $message = ($this->sendMessageCommandHandler)($command);
-        return new Message("", "", false);
+        $command = new SendMessageCommand($sessionToken, $message);
+        return ($this->sendMessageCommandHandler)($command);
     }
 
 }

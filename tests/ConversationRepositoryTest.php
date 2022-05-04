@@ -46,6 +46,6 @@ class ConversationRepositoryTest extends TestCase
 
        $firstMessage = $conversationWithHistory->getMessages()[0];
        $this->assertInstanceOf(Message::class, $firstMessage);
-       $this->assertEquals($text, $firstMessage->getMessage());
+       $this->assertEquals($text, $firstMessage->getMessageText());
    } 
 }

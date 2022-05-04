@@ -9,7 +9,7 @@ use App\Domain\Message\Message;
 
 class SendMessageCommandHandler
 {
-    private MessageRepositoryInterface $conversationRepositoryInterface;
+    private MessageRepositoryInterface $messageRepositoryInterface;
 
     public function __construct(MessageRepositoryInterface $messageRepositoryInterface)
     {
@@ -18,8 +18,8 @@ class SendMessageCommandHandler
 
     public function __invoke(SendMessageCommand $sendMessageCommand): Message
     {
-        var_dump("He llegado y el valor es: " . $sendMessageCommand->getSessionToken());
-        return new Message("", "", true);
+
+        return $this->messageRepositoryInterface->create($sendMessageCommand->getMessage(), $sendMessageCommand->getSessionToken());
     }
 
 }

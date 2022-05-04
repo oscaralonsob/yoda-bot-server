@@ -10,15 +10,15 @@ class Message implements JsonSerializable
 {
     private string $user;
 
-    private string $message;
+    private string $messageText;
 
     private bool $resultFound;
 
 
-    public function __construct(string $user, string $message, bool $resultFound) 
+    public function __construct(string $user, string $messageText, bool $resultFound) 
     {
         $this->user = $user;
-        $this->message = $message;
+        $this->messageText = $messageText;
         $this->resultFound = $resultFound;
     }
 
@@ -27,9 +27,9 @@ class Message implements JsonSerializable
         return $this->user;
     }
 
-    public function getMessage(): string
+    public function getMessageText(): string
     {
-        return $this->message;
+        return $this->messageText;
     }
 
     public function getResultFound(): bool
@@ -41,7 +41,7 @@ class Message implements JsonSerializable
     {
         return [
             "user" => $this->user,
-            "message" => $this->message,
+            "messageText" => $this->messageText,
             "resultFound" => $this->resultFound
         ];
     }

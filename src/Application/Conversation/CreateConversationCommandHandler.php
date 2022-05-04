@@ -18,10 +18,7 @@ class CreateConversationCommandHandler
 
     public function __invoke(CreateConversationCommand $createConversationCommand): Conversation
     {
-        var_dump("he llegado al conversation");
-        //$this->conversationRepositoryInterface->create();
-
-        return new Conversation("Test", []);
+        return $this->conversationRepositoryInterface->create();
     }
 
 }

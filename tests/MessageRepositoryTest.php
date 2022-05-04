@@ -17,7 +17,7 @@ class MessageRepositoryTest extends TestCase
         $message = $messageRepository->create("This is a message", $conversation->getSessionToken());
         
         $this->assertInstanceOf(Message::class, $message);
-        $this->assertNotEmpty($message->getMessage());
+        $this->assertNotEmpty($message->getMessageText());
         $this->assertEquals($message->getUser(), "bot");
     } 
 }

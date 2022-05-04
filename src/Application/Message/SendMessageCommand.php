@@ -9,13 +9,21 @@ class SendMessageCommand
 {
     private string $sessionToken;
 
-    public function __construct(string $sessionToken)
+    private string $message;
+
+    public function __construct(string $sessionToken, string $message)
     {
         $this->sessionToken = $sessionToken;
+        $this->message = $message;
     }
 
     public function getSessionToken(): string
     {
         return $this->sessionToken;
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
     }
 }
