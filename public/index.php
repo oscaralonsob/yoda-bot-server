@@ -1,7 +1,10 @@
 <?php
 
 require '../vendor/autoload.php';
-$routes = require __DIR__ . '/../src/Routing/routes.php';
+$routes = require '../src/Routing/routes.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable("../");
+$dotenv->safeLoad();
 
 $app = new \Slim\App;
 

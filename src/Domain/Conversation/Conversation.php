@@ -8,22 +8,32 @@ use JsonSerializable;
 
 class Conversation implements JsonSerializable
 {
-    private int $id;
+    private string $sessionToken;
 
-    private string $message;
+    private array $messages;
 
 
-    public function __construct(int $id, string $message) 
+    public function __construct(string $sessionToken, array $messages = []) 
     {
-        $this->id = $id;
-        $this->message = $message;
+        $this->sessionToken = $sessionToken;
+        $this->messages = $messages;
+    }
+
+    public function getSessionToken(): string
+    {
+        return $this->sessionToken;
+    }
+
+    public function getMessages(): array
+    {
+        return $this->messages;
     }
 
     public function jsonSerialize(): array
     {
         return [
-            "id" => $this->id,
-            "message" => $this->message
+            "sessionToken" => $this->sessionToken,
+            "messages" => $this->messages
         ];
     }
 }
