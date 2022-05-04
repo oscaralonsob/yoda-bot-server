@@ -23,14 +23,18 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
             'headers' => [
                 'Content-Type' => 'application/json',
                 'x-inbenta-key' => $_ENV['APIKEY'],
-                'authorization' => 'Bearer' . $token,
-                'x-inbenta-session' => 'Bearer' . $sessionToken
+                'authorization' => 'Bearer ' . $token,
+                'x-inbenta-session' => 'Bearer ' . $sessionToken
             ]
         ]);
 
-        $response = $guzzleClient->request("post", "/prod/chatbot/v1/conversation");
+        $body = [
+            'message' => $message
+        ];
+
+        $response = $guzzleClient->request("post", "/prod/chatbot/v1/conversation/message", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
-        return new Message("", "", true);
+        return new Message("bot", $object->answers[0]->messageList[0], true);
     }
 }

@@ -22,6 +22,21 @@ class Message implements JsonSerializable
         $this->resultFound = $resultFound;
     }
 
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function getResultFound(): bool
+    {
+        return $this->resultFound;
+    }
+
     public function jsonSerialize(): array
     {
         return [

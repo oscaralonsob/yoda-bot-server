@@ -6,6 +6,7 @@ namespace App\Infrastructure\InbentaApi\Conversation;
 
 use App\Domain\Conversation\Conversation;
 use App\Domain\Conversation\ConversationRepositoryInterface;
+use App\Domain\Message\Message;
 use App\Infrastructure\InbentaApi\InbentaApiRepository;
 
 use GuzzleHttp\Client;
@@ -31,14 +32,15 @@ class ConversationApiRepository extends InbentaApiRepository implements Conversa
             ]
         ]);
 
-        $body = [
-            'sessionToken' => $sessionToken
-        ];
-
-        $response = $guzzleClient->request("get", "/prod/chatbot/v1/conversation/history", $body);
+        $response = $guzzleClient->request("get", "/prod/chatbot/v1/conversation/history");
         $object = $this->translateResponse($response);
 
-        return new Conversation($sessionToken, $object);
+        $messages = [];
+        foreach ($object as $message) {
+            $messages[] = new Message($message->user, $message->messageList[0], true); //TODO: found flag
+        }
+
+        return new Conversation($sessionToken, $messages);
     }
 
     public function create(): Conversation 
