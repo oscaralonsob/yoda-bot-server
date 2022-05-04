@@ -1,8 +1,9 @@
 {
     "require": {
-        "slim/slim": "3.*",
+        "slim/slim": "4.*",
         "guzzlehttp/guzzle": "^7.4",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "php-di/php-di": "^6.4"
     },
     "autoload": {
         "psr-4": {
