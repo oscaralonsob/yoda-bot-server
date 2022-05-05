@@ -35,7 +35,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
         $response = $guzzleClient->request("post", "/prod/chatbot/v1/conversation/message", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
-        return new Message("bot", $object->answers[0]->messageList[0], $object->answers[0]->flags[0] == "no-results");
+        return new Message("bot", $object->answers[0]->messageList[0], $object->answers[0]->flags[0] != "no-results");
     }
 
     public function getFilmMessage(): Message
@@ -81,7 +81,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
 
         $body = [
             'query' => "{
-                allPeople {
+                allPeople(first: 6) {
                     people {
                         name
                     }
@@ -92,7 +92,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
         $response = $guzzleClient->request("post", "/api", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
-        $filmTitles = "The <b>force</b> is in this movies:";
+        $filmTitles = "I haven't found any result, but here is a list of some Star Wars characters:";
         foreach ($object->data->allPeople->people as $people) {
             $filmTitles .= "<ul><li>" . $people->name . "</ul></li>";
         }   

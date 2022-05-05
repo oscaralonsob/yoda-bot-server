@@ -33,12 +33,13 @@ class SendMessageAction
         $data = json_decode($req->getBody()->getContents());
         $message = $data->messageText;
         $sessionToken = $data->storeSession;
+        $lastMessageWasFound = $data->lastMessageWasFound != "false";
 
         if ($sessionToken == null) {
             $sessionToken = $this->createConversation();
         }
 
-        $answer = $this->sendMessage($sessionToken, $message);
+        $answer = $this->sendMessage($sessionToken, $message, $lastMessageWasFound);
 
     
         $json = json_encode(["answer" => $answer, "storeSession" => $sessionToken], JSON_PRETTY_PRINT);
@@ -57,9 +58,9 @@ class SendMessageAction
         return $conversation->getSessionToken();
     }
 
-    private function sendMessage(string $sessionToken, string $message): Message
+    private function sendMessage(string $sessionToken, string $message, bool $lastMessageWasFound): Message
     {
-        $command = new SendMessageCommand($sessionToken, $message);
+        $command = new SendMessageCommand($sessionToken, $message, $lastMessageWasFound);
         return ($this->sendMessageCommandHandler)($command);
     }
 

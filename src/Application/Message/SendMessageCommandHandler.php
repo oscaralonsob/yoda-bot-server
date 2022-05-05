@@ -24,8 +24,7 @@ class SendMessageCommandHandler
 
         $message = $this->messageRepositoryInterface->create($sendMessageCommand->getMessage(), $sendMessageCommand->getSessionToken());
 
-        //TODO: look for two ocurrences of not found
-        if (!$message->getResultFound()) {
+        if (!$message->getResultFound() && !$sendMessageCommand->getLastMessageWasFound()) {
             return $this->messageRepositoryInterface->getCharacterMessage();
         }
 

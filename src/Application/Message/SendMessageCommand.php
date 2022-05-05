@@ -11,10 +11,13 @@ class SendMessageCommand
 
     private string $message;
 
-    public function __construct(string $sessionToken, string $message)
+    private bool $lastMessageWasFound;
+
+    public function __construct(string $sessionToken, string $message, bool $lastMessageWasFound)
     {
         $this->sessionToken = $sessionToken;
         $this->message = $message;
+        $this->lastMessageWasFound = $lastMessageWasFound;
     }
 
     public function getSessionToken(): string
@@ -25,5 +28,10 @@ class SendMessageCommand
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    public function getLastMessageWasFound(): bool
+    {
+        return $this->lastMessageWasFound;
     }
 }
