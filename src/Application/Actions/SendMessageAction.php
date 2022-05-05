@@ -43,10 +43,10 @@ class SendMessageAction
             $answer = $this->sendMessage($sessionToken, $message, $lastMessageWasFound);
             
             $resp->getBody()->write(json_encode(["answer" => $answer, "storeSession" => $sessionToken]));
-            $resp->withStatus(200);
+            $resp = $resp->withStatus(200);
         } catch (Exception $e) {
             $resp->getBody()->write(json_encode(["message" => "An unexpected error has ocurred", "code" => 500]));
-            $resp->withStatus(500);
+            $resp = $resp->withStatus(500);
         } finally {
             return $resp->withHeader('Content-Type', 'application/json');
         }
