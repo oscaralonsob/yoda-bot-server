@@ -10,6 +10,7 @@ use App\Application\Message\SendMessageCommand;
 use App\Application\Message\SendMessageCommandHandler;
 
 use App\Domain\Message\Message;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use GuzzleHttp\Client;
@@ -35,19 +36,20 @@ class SendMessageAction
         $sessionToken = $data->storeSession;
         $lastMessageWasFound = $data->lastMessageWasFound != "false";
 
-        if ($sessionToken == null) {
-            $sessionToken = $this->createConversation();
+        try {
+            if ($sessionToken == null) {
+                $sessionToken = $this->createConversation();
+            }
+            $answer = $this->sendMessage($sessionToken, $message, $lastMessageWasFound);
+            
+            $resp->getBody()->write(json_encode(["answer" => $answer, "storeSession" => $sessionToken]));
+            $resp->withStatus(200);
+        } catch (Exception $e) {
+            $resp->getBody()->write(json_encode(["message" => "An unexpected error has ocurred", "code" => 500]));
+            $resp->withStatus(500);
+        } finally {
+            return $resp->withHeader('Content-Type', 'application/json');
         }
-
-        $answer = $this->sendMessage($sessionToken, $message, $lastMessageWasFound);
-
-    
-        $json = json_encode(["answer" => $answer, "storeSession" => $sessionToken], JSON_PRETTY_PRINT);
-        $resp->getBody()->write($json);
-
-        return $resp
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus(200);
     }
 
     private function createConversation(): string

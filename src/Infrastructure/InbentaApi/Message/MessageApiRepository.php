@@ -6,18 +6,26 @@ namespace App\Infrastructure\InbentaApi\Message;
 
 use App\Domain\Message\Message;
 use App\Domain\Message\MessageRepositoryInterface;
-use App\Infrastructure\InbentaApi\InbentaApiRepository;
+use App\Infrastructure\InbentaApi\AbstractInbentaApiRepository;
+use App\Infrastructure\InbentaApi\Auth\AuthApiRepository;
 
 use GuzzleHttp\Client;
 
-class MessageApiRepository extends InbentaApiRepository implements MessageRepositoryInterface 
+class MessageApiRepository  extends AbstractInbentaApiRepository implements MessageRepositoryInterface 
 {
+
+    private AuthApiRepository $authApiRepository;
+
+    public function __construct()
+    {
+        $this->authApiRepository = new AuthApiRepository();
+    }
 
     public function create(string $message, string $sessionToken): Message 
     {
-        $token = $this->getAccessToken();
+        $token = $this->authApiRepository->getAccessToken();
 
-        $guzzleClient = new Client([
+        $this->guzzleClient = new Client([
             'base_uri' => 'https://api-gce3.inbenta.io',
             'timeout'  => 5.0,
             'headers' => [
@@ -32,7 +40,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
             'message' => $message
         ];
 
-        $response = $guzzleClient->request("post", "/prod/chatbot/v1/conversation/message", ['form_params' => $body]);
+        $response = $this->guzzleClient->request("post", "/prod/chatbot/v1/conversation/message", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
         return new Message("bot", $object->answers[0]->messageList[0], $object->answers[0]->flags[0] != "no-results");
@@ -40,7 +48,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
 
     public function getFilmMessage(): Message
     {
-        $guzzleClient = new Client([
+        $this->guzzleClient = new Client([
             'base_uri' => 'https://inbenta-graphql-swapi-prod.herokuapp.com',
             'timeout'  => 5.0,
             'headers' => [
@@ -58,7 +66,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
             }"
         ];
 
-        $response = $guzzleClient->request("post", "/api", ['form_params' => $body]);
+        $response = $this->guzzleClient->request("post", "/api", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
         $filmTitles = "The <b>force</b> is in this movies:";
@@ -71,7 +79,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
 
     public function getCharacterMessage(): Message
     {
-        $guzzleClient = new Client([
+        $this->guzzleClient = new Client([
             'base_uri' => 'https://inbenta-graphql-swapi-prod.herokuapp.com',
             'timeout'  => 5.0,
             'headers' => [
@@ -89,7 +97,7 @@ class MessageApiRepository extends InbentaApiRepository implements MessageReposi
             }"
         ];
 
-        $response = $guzzleClient->request("post", "/api", ['form_params' => $body]);
+        $response = $this->guzzleClient->request("post", "/api", ['form_params' => $body]);
         $object = $this->translateResponse($response);
 
         $filmTitles = "I haven't found any result, but here is a list of some Star Wars characters:";

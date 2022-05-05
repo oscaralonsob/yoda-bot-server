@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\InbentaApi;
+namespace App\Infrastructure\InbentaApi\Auth;
 
+use App\Infrastructure\InbentaApi\AbstractInbentaApiRepository;
 use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
 
-abstract class InbentaApiRepository
+class AuthApiRepository extends AbstractInbentaApiRepository
 {
 
     private Client $authClient;
@@ -26,7 +26,7 @@ abstract class InbentaApiRepository
 
 
     // Ideally this should be stored since it has an expiration time and it can be reused (20 minutes, expires_in/expiration)
-    protected function getAccessToken()
+    public function getAccessToken()
     {
         $body = [
             'secret' => $_ENV["SECRET"]
@@ -37,12 +37,5 @@ abstract class InbentaApiRepository
 
         return $object->accessToken;
 
-    }
-
-    protected function translateResponse(ResponseInterface $response)
-    {
-        $content = $response->getBody()->getContents();
-
-        return json_decode($content);
     }
 }
