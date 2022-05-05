@@ -13,7 +13,6 @@ use App\Domain\Message\Message;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use GuzzleHttp\Client;
 
 class SendMessageAction
 {

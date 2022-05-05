@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 
 class AuthApiRepository extends AbstractInbentaApiRepository
 {
-
     private Client $authClient;
 
     public function __construct()
@@ -24,8 +23,7 @@ class AuthApiRepository extends AbstractInbentaApiRepository
         ]);
     }
 
-
-    // Ideally this should be stored since it has an expiration time and it can be reused (20 minutes, expires_in/expiration)
+    // This can be cached with an expiration time to be reused over the new request
     public function getAccessToken()
     {
         $body = [
@@ -36,6 +34,5 @@ class AuthApiRepository extends AbstractInbentaApiRepository
         $object = $this->translateResponse($response);
 
         return $object->accessToken;
-
     }
 }
