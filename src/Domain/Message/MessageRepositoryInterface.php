@@ -9,4 +9,6 @@ interface MessageRepositoryInterface
 {
 
     public function create(string $message, string $sessionToken): Message;
+
+    public function getFilmMessage(): Message;
 }

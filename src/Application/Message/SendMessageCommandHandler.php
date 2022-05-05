@@ -18,8 +18,18 @@ class SendMessageCommandHandler
 
     public function __invoke(SendMessageCommand $sendMessageCommand): Message
     {
+        if (str_contains($sendMessageCommand->getMessage(), "force")) {
+            return $this->messageRepositoryInterface->getFilmMessage();
+        }
 
-        return $this->messageRepositoryInterface->create($sendMessageCommand->getMessage(), $sendMessageCommand->getSessionToken());
+        $message = $this->messageRepositoryInterface->create($sendMessageCommand->getMessage(), $sendMessageCommand->getSessionToken());
+
+        //TODO: look for two ocurrences of not found
+        if (!$message->getResultFound()) {
+            return $this->messageRepositoryInterface->getCharacterMessage();
+        }
+
+        return $message;
     }
 
 }

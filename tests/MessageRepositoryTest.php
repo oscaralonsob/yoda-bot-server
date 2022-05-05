@@ -19,5 +19,25 @@ class MessageRepositoryTest extends TestCase
         $this->assertInstanceOf(Message::class, $message);
         $this->assertNotEmpty($message->getMessageText());
         $this->assertEquals($message->getUser(), "bot");
+    }
+
+    public function testGetFilmMessage() 
+    {
+        $messageRepository = new MessageApiRepository();
+        $message = $messageRepository->getFilmMessage();
+        
+        $this->assertInstanceOf(Message::class, $message);
+        $this->assertNotEmpty($message->getMessageText());
+        $this->assertEquals($message->getUser(), "bot");
+    }
+
+    public function testGetCharactersMessage() 
+    {
+        $messageRepository = new MessageApiRepository();
+        $message = $messageRepository->getCharacterMessage();
+        
+        $this->assertInstanceOf(Message::class, $message);
+        $this->assertNotEmpty($message->getMessageText());
+        $this->assertEquals($message->getUser(), "bot");
     } 
 }
